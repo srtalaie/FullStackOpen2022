@@ -1,0 +1,13 @@
+Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server-->Browser: notes
+Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server-->Browser: main.js
+Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Server-->Browser: main.css
+Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: data.json
+
+note over Browser: User inputs new note and clicks submit
+Browser->(2)Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+note over Server: User input sent to server
+note over Browser: Page updates with new data appended executed via js

@@ -1,6 +1,6 @@
 note over Browser: User hits url
 Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
-Server-->Browser: notes
+Server-->Browser: notes (HTML)
 Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
 Server-->Browser: main.js
 Browser->Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
