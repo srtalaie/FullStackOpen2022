@@ -47,8 +47,8 @@ const App = () => {
         neutral={neutral}
         bad={bad}
         all={all}
-        percentagePositive={percentagePositive}
         averageScore={averageScore}
+        percentagePositive={percentagePositive.toFixed(2)}
       />
     </div>
   )
