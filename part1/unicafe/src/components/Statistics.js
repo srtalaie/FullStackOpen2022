@@ -9,14 +9,33 @@ const Statistics = ({ good, neutral, bad, all, percentagePositive, averageScore 
     )
   } else {
     return (
-      <div>
-        <StatisticsLine statName="good" stat={good} />
-        <StatisticsLine statName="neutral" stat={neutral} />
-        <StatisticsLine statName="bad" stat={bad} />
-        <StatisticsLine statName="all" stat={all} />
-        <StatisticsLine statName="average" stat={averageScore} />
-        <StatisticsLine statName="percent positive" stat={`${percentagePositive}%`} />
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <td><h3>statistics</h3></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <StatisticsLine statName="good" stat={good} />
+          </tr>
+          <tr>
+            <StatisticsLine statName="neutral" stat={neutral} />
+          </tr>
+          <tr>     
+            <StatisticsLine statName="bad" stat={bad} />
+          </tr>
+          <tr>       
+            <StatisticsLine statName="all" stat={all} />
+          </tr>
+          <tr>       
+            <StatisticsLine statName="average" stat={averageScore} />
+          </tr>
+          <tr>       
+            <StatisticsLine statName="percent positive" stat={`${percentagePositive}%`} />
+          </tr>
+        </tbody>
+      </table>
     )
   }
 }

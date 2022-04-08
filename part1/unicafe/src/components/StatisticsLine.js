@@ -1,3 +1,3 @@
-const StatisticsLine = ({ stat, statName }) => <p>{statName}: {stat}</p>
+const StatisticsLine = ({ stat, statName }) => <td>{statName}: {stat}</td>
 
 export default StatisticsLine
