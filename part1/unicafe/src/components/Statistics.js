@@ -1,3 +1,5 @@
+import StatisticsLine from "./StatisticsLine"
+
 const Statistics = ({ good, neutral, bad, all, percentagePositive, averageScore }) => {
   if(isNaN(averageScore)) {
     return (
@@ -8,12 +10,12 @@ const Statistics = ({ good, neutral, bad, all, percentagePositive, averageScore 
   } else {
     return (
       <div>
-          <p>good: {good}</p>
-          <p>neutral: {neutral}</p>
-          <p>bad: {bad}</p>
-          <p>all: {all}</p>
-          <p>average: {averageScore}</p>
-          <p>positive: {percentagePositive}%</p>
+        <StatisticsLine statName="good" stat={good} />
+        <StatisticsLine statName="neutral" stat={neutral} />
+        <StatisticsLine statName="bad" stat={bad} />
+        <StatisticsLine statName="all" stat={all} />
+        <StatisticsLine statName="average" stat={averageScore} />
+        <StatisticsLine statName="percent positive" stat={`${percentagePositive}%`} />
       </div>
     )
   }
