@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-const Button = ({ onClick }) => {
+const Button = ({ onClick, name }) => {
   return(
-    <button onClick={onClick}>Next Anecdote</button>
+    <button onClick={onClick}>{name}</button>
   )
 }
 
@@ -16,17 +16,26 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
-   
+
+  const [points, setPoints] = useState(new Array(7).fill(0))
   const [selected, setSelected] = useState(0)
 
-  const handleClick = () => {
+  const handleAnecdoteClick = () => {
     setSelected(Math.floor((Math.random() * (anecdotes.length))))
+  }
+
+  const handleVoteClick = () => {
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
   }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button onClick={handleClick}></Button>
+      <p>This anecdote has {points[selected]} votes</p>
+      <Button onClick={handleAnecdoteClick} name={"next anecdote"} />
+      <Button onClick={handleVoteClick} name={"vote"} />
     </div>
   )
 }
