@@ -44,12 +44,8 @@ const handleOpenCountryInfo = (event) => {
       ))}
       {Object.keys(selectedCountry).length > 0 ? (
         <CountryInfo 
-          key={selectedCountry.name.common}
-          name={selectedCountry.name.common}
-          capital={selectedCountry.capital[0]}
-          area={selectedCountry.area}
-          languages={selectedCountry.languages}
-          flag={selectedCountry.flags.svg}
+          key={selectedCountry.name.official}
+          country={selectedCountry}
         />
       ) : <></>}
     </div>
