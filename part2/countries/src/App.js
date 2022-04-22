@@ -8,6 +8,7 @@ import CountryInfo from './components/CountryInfo'
 function App() {
 const [countries, setCountries] = useState([])
 const [newSearchTerm, setSearchTerm] = useState('')
+const [selectedCountry, setSelectedCountry] = useState({})
 
 useEffect(() => {
   axios
@@ -22,28 +23,35 @@ const handleSearch = (event) => {
   setSearchTerm(event.target.value)
 }
 
+const handleOpenCountryInfo = (event) => {
+  setSelectedCountry(countries.find((country) => country.name.common === event.target.value))
+}
+
   return (
     <div className="App">
       <SearchBox value={newSearchTerm} onChange={handleSearch} />
       {countries.filter((country) => regex.test(country.name.common)).length >= 10 ? (<div>Too many matches, specify another filter</div>) : countries.filter((country) => regex.test(country.name.common)).map((country) => (
-        countries.filter((country) => regex.test(country.name.common)).length === 1 ? (
-          <CountryInfo 
-            key={country.name.common}
-            name={country.name.common}
-            capital={country.capital[0]}
-            area={country.area}
-            languages={country.languages}
-            flag={country.flags.svg}
-          />
-        ) : (
+        <div>
           <ul>
             <Country
               key={country.name.common} 
-              name={country.name.common} 
+              name={country.name.common}
+              value={country.name.common}
+              onClick={handleOpenCountryInfo}
             /> 
           </ul>
-        )
+        </div>
       ))}
+      {Object.keys(selectedCountry).length > 0 ? (
+        <CountryInfo 
+          key={selectedCountry.name.common}
+          name={selectedCountry.name.common}
+          capital={selectedCountry.capital[0]}
+          area={selectedCountry.area}
+          languages={selectedCountry.languages}
+          flag={selectedCountry.flags.svg}
+        />
+      ) : <></>}
     </div>
   )
 }
