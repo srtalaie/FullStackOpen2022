@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Person from './components/Person'
+import Notification from './components/Notification'
 import personsService from './services/personsService'
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearchTerm, setSearchTerm] = useState('')
+  const [notifMsg, setNotifMsg] = useState(null)
 
   useEffect(() => {
     personsService
@@ -52,6 +54,10 @@ const App = () => {
           setPersons(persons.concat(response))
           setNewName('')
           setNewNumber('')
+          setNotifMsg(`${response.name} was successfully created.`)
+          setTimeout(() => {
+            setNotifMsg(null)
+          }, 3000)
         })
         .catch(err => console.log(err))
 
@@ -76,6 +82,10 @@ const App = () => {
       .updatePerson(id, updatedInfo)
       .then(response => {
         setPersons(persons.map(person => person.id !== id ? person : response))
+        setNotifMsg(`${response.name} was successfully updated.`)
+        setTimeout(() => {
+          setNotifMsg(null)
+        }, 3000)
       })
       .catch(err => console.log(err))
   }
@@ -98,6 +108,7 @@ const App = () => {
         onClickForHandleAddPerson={handleAddPerson}
       />
       <h2>Numbers</h2>
+      <Notification message={notifMsg} />
       <ul>
         {persons.filter((person) => regex.test(person.name)).map((person) => 
           <Person
