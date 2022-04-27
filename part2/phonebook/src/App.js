@@ -6,12 +6,33 @@ import Person from './components/Person'
 import Notification from './components/Notification'
 import personsService from './services/personsService'
 
+//Styles for Notification
+const success = {
+  color: 'green',
+  background: 'lightgrey',
+  fontSize: 20,
+  borderStyle: 'solid',
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10,
+}
+const error = {
+  color: 'red',
+  background: 'lightgrey',
+  fontSize: 20,
+  borderStyle: 'solid',
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10,
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearchTerm, setSearchTerm] = useState('')
   const [notifMsg, setNotifMsg] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     personsService
@@ -59,7 +80,15 @@ const App = () => {
             setNotifMsg(null)
           }, 3000)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          setIsError(true)
+          setNotifMsg(`${err.toString()}, Unable to add ${newName}`)
+          setTimeout(() => {
+            setNotifMsg(null)
+            setIsError(false)
+          }, 3000)
+        })
 
     }
   }
@@ -73,7 +102,15 @@ const App = () => {
       .then(
         setPersons(persons.filter(person => person.id !== parseInt(id)))
       )
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        setIsError(true)
+        setNotifMsg(`${err.toString()}, Unable to delete Person`)
+        setTimeout(() => {
+          setNotifMsg(null)
+          setIsError(false)
+        }, 3000)
+      })
     }
   }
 
@@ -87,13 +124,22 @@ const App = () => {
           setNotifMsg(null)
         }, 3000)
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        setIsError(true)
+        setNotifMsg(`${err.toString()}, Unable to update ${updatedInfo.name}`)
+        setTimeout(() => {
+          setNotifMsg(null)
+          setIsError(false)
+        }, 3000)
+      })
   }
 
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notifMsg} messageStyle={isError ? error : success}/>
       <Filter 
         name="search"
         value={newSearchTerm}
@@ -108,7 +154,6 @@ const App = () => {
         onClickForHandleAddPerson={handleAddPerson}
       />
       <h2>Numbers</h2>
-      <Notification message={notifMsg} />
       <ul>
         {persons.filter((person) => regex.test(person.name)).map((person) => 
           <Person
