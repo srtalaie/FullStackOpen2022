@@ -36,7 +36,11 @@ const App = () => {
   const handleAddPerson = (event) => {
     event.preventDefault()
     if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already in the phone book, would you like to replace their old number with the new number?`)) {
+        const existingPerson = persons.find(person => person.name === newName)
+        existingPerson.number = newNumber
+        handleUpdatePerson(existingPerson.id, existingPerson)
+      }
     } else {
       let newPerson = {
         name: newName,
@@ -49,8 +53,34 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(err => console.log(err))
+
     }
   }
+
+  const handleDeletePerson = (event) => {
+    event.preventDefault()
+    let id = event.target.id
+    if (window.confirm(`Do you really want to delete ${event.target.value}`)) {
+      personsService
+      .deletePerson(id)
+      .then(
+        setPersons(persons.filter(person => person.id !== parseInt(id)))
+      )
+      .catch(err => console.log(err))
+    }
+  }
+
+  const handleUpdatePerson = (id, updatedInfo) => {
+    personsService
+      .updatePerson(id, updatedInfo)
+      .then(response => {
+        setPersons(persons.map(person => person.id !== id ? person : response))
+      })
+      .catch(err => console.log(err))
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -71,9 +101,11 @@ const App = () => {
       <ul>
         {persons.filter((person) => regex.test(person.name)).map((person) => 
           <Person
-            key={person.name} 
+            key={person.id} 
             name={person.name} 
-            number={person.number} 
+            number={person.number}
+            id={person.id}
+            onDelete={handleDeletePerson}
           />
         )}
       </ul>
