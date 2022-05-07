@@ -100,7 +100,7 @@ const App = () => {
       personsService
       .deletePerson(id)
       .then(
-        setPersons(persons.filter(person => person.id !== parseInt(id)))
+        setPersons(persons.filter(person => person.id !== id))
       )
       .catch(err => {
         console.log(err)
