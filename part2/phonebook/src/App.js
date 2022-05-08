@@ -40,6 +40,9 @@ const App = () => {
       .then(persons => {
         setPersons(persons)
       })
+      .catch(error => {
+        console.log(error.response.data)
+      })
   }, [])
 
   const regex = new RegExp(newSearchTerm, 'i')
@@ -81,15 +84,14 @@ const App = () => {
           }, 3000)
         })
         .catch(err => {
-          console.log(err)
+          console.log(err.response.data)
           setIsError(true)
-          setNotifMsg(`${err.toString()}, Unable to add ${newName}`)
+          setNotifMsg(`${err.response.data.error}, Unable to add ${newName}`)
           setTimeout(() => {
             setNotifMsg(null)
             setIsError(false)
           }, 3000)
         })
-
     }
   }
 
@@ -105,7 +107,7 @@ const App = () => {
       .catch(err => {
         console.log(err)
         setIsError(true)
-        setNotifMsg(`${err.toString()}, Unable to delete Person`)
+        setNotifMsg(`${err.response.data.error}, Unable to delete Person`)
         setTimeout(() => {
           setNotifMsg(null)
           setIsError(false)
@@ -127,7 +129,7 @@ const App = () => {
       .catch(err => {
         console.log(err)
         setIsError(true)
-        setNotifMsg(`${err.toString()}, Unable to update ${updatedInfo.name}`)
+        setNotifMsg(`${err.response.data.error}, Unable to update ${updatedInfo.name}`)
         setTimeout(() => {
           setNotifMsg(null)
           setIsError(false)
