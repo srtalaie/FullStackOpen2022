@@ -30,7 +30,7 @@ const listWithMultipleBlogs = [
     {
         "_id": "62783cc4a678c8b0af78d317",
         "title": "Blog 3",
-        "author": "Arthur Blog",
+        "author": "Splooge",
         "url": "https://www.google.com",
         "likes": 25,
         "__v": 0
@@ -38,7 +38,7 @@ const listWithMultipleBlogs = [
     {
         "_id": "62783e67c3fb9c58721b682c",
         "title": "Blog 4",
-        "author": "Arthur Blog",
+        "author": "Splooge",
         "url": "https://www.google.com",
         "likes": 17,
         "__v": 0
@@ -46,7 +46,7 @@ const listWithMultipleBlogs = [
     {
         "_id": "62783f1e3570494144c8a6c9",
         "title": "Blog 5",
-        "author": "Arthur Blog",
+        "author": "Joe Mama",
         "url": "https://www.google.com",
         "likes": 6,
         "__v": 0
@@ -70,9 +70,24 @@ describe('Total Likes', () => {
     })
 })
 
-describe.only('Favorite blog', () => {
+describe('Favorite blog', () => {
     test('-blog with the most likes', () => {
         const result = listHelper.favoriteBlog(listWithMultipleBlogs)
         expect(result).toEqual(listWithMultipleBlogs[2])
+    })
+})
+
+describe('Most common Author', () => {
+    let maxAuthor = { author: 'Arthur Blog', blogs: 2 }
+    test('-author with the most blogs', () => {
+        const result = listHelper.mostBlogs(listWithMultipleBlogs)
+        expect(result).toEqual(maxAuthor)
+    })
+})
+describe('Most liked Author', () => {
+    let maxAuthor = { author: 'Splooge', likes: 42 }
+    test('-author with the most likes', () => {
+        const result = listHelper.mostLikes(listWithMultipleBlogs)
+        expect(result).toEqual(maxAuthor)
     })
 })
