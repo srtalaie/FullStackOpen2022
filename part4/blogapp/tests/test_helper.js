@@ -15,6 +15,19 @@ const initialBlogs = [
     }
 ]
 
+const checkForField = (blogs, field) => {
+    return blogs.every( blog => {
+        field in blog
+    })
+}
+
+const getBlogs = async () => {
+    const blogs = await Blog.find({})
+    return blogs.map(blog => blog.toJSON())
+}
+
 module.exports = {
-    initialBlogs
+    initialBlogs,
+    checkForField,
+    getBlogs
 }

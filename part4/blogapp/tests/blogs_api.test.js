@@ -20,10 +20,18 @@ beforeEach(async () => {
 })
 
 test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+    await api
+        .get('/api/blogs')
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+})
+
+test('unique identifier _id exists', async () => {
+    const response = await api.get('/api/blogs')
+    const blogs = response.body
+    blogs.forEach((blog) => {
+        expect(blog._id).toBeDefined()
+    })
 })
 
 afterAll(() => {
