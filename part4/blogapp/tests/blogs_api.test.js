@@ -53,6 +53,23 @@ test('able to create new blog post and blog is saved to DB', async () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
 })
 
+test('if likes property is missing, default to 0', async () => {
+    const newBlog = {
+        title: 'New Blog',
+        author: 'New Author',
+        url: 'www.blog.com',
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+
+    const blogWithZeroLikes = await Blog.find({ title: 'New Blog' })
+
+    expect(blogWithZeroLikes[0].likes).toEqual(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
