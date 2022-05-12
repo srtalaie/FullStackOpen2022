@@ -34,6 +34,25 @@ test('unique identifier _id exists', async () => {
     })
 })
 
+test('able to create new blog post and blog is saved to DB', async () => {
+    const newBlog = {
+        title: 'New Blog',
+        author: 'New Author',
+        url: 'www.blog.com',
+        likes: 9000
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
