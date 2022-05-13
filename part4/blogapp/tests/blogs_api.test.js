@@ -82,6 +82,19 @@ test('if missing title/url then api responds with 400 error', async () => {
 
 })
 
+test.only('if user is able to successfully delete a blog', async () => {
+    const response = await api.get('/api/blogs')
+    const blogToBeDeletedID = response.body[0]._id
+
+    await api
+        .delete(`/api/blogs/${blogToBeDeletedID}`)
+
+
+    const newResponseWithoutDeletedBlog = await Blog.find({ _id: blogToBeDeletedID})
+
+    expect(newResponseWithoutDeletedBlog).toEqual([])
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

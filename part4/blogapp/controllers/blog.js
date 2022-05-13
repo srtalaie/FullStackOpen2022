@@ -30,12 +30,8 @@ blogRouter.get('/:id', async (request, response) => {
 blogRouter.delete('/:id', async (request, response) => {
     const deletedBlog = await Blog.findOneAndDelete({ _id: request.params.id })
 
-      if (deletedBlog) {
-        response.send(deletedBlog)
-        response.status(204).end()
-      } else {
-        response.status(404).end()
-      }
+    response.send(deletedBlog)
+    response.status(204).end()
 })
 
 blogRouter.put('/:id', async (request, response) => {
