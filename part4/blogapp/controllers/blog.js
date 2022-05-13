@@ -43,11 +43,7 @@ blogRouter.put('/:id', async (request, response) => {
     }
     const updatedBlog = await Blog.findOneAndUpdate({ _id: request.params.id }, blog,  { new: true, runValidators: true, context: 'query' })
 
-    if (updatedBlog) {
-        response.json(updatedBlog)
-    } else {
-        response.status(404).end()
-    }
+    response.json(updatedBlog)
 })
 
 module.exports = blogRouter
