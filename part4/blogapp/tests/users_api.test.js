@@ -1,5 +1,6 @@
 const supertest = require('supertest')
 const app = require('../app')
+const testHelper = require('./test_helper')
 
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
@@ -47,13 +48,43 @@ describe('Basic functionalities for users', () => {
             password: 'mindofmencia!'
         }
 
-       const response = await api
-            .post('/api/users')
-            .send(newUser)
-            .expect(400)
-            .expect('Content-Type', /application\/json/)
+       const response = await testHelper.errorWithUserCreation(newUser, api)
         
         expect(response.body.error).toContain('username must be unique')
+            
+        const allUsersEnd = await User.find({})
+        expect(allUsersEnd).toEqual(allUsersStart)
+    })
+
+    test('username must be at least 3 characters', async () => {
+        const allUsersStart = await User.find({})
+
+        const newUser = {
+            username: 'g',
+            name: 'Carlos Mencia',
+            password: 'mindofmencia!'
+        }
+
+       const response = await testHelper.errorWithUserCreation(newUser, api)
+        
+        expect(response.body.error).toContain('password and username must be at least 3 characters')
+            
+        const allUsersEnd = await User.find({})
+        expect(allUsersEnd).toEqual(allUsersStart)
+    })
+
+    test('password must be at least 3 characters', async () => {
+        const allUsersStart = await User.find({})
+
+        const newUser = {
+            username: 'g',
+            name: 'Carlos Mencia',
+            password: 'we'
+        }
+
+       const response = await testHelper.errorWithUserCreation(newUser, api)
+        
+        expect(response.body.error).toContain('password and username must be at least 3 characters')
             
         const allUsersEnd = await User.find({})
         expect(allUsersEnd).toEqual(allUsersStart)

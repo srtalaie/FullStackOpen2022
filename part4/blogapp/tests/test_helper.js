@@ -26,8 +26,19 @@ const getBlogs = async () => {
     return blogs.map(blog => blog.toJSON())
 }
 
+const errorWithUserCreation = async (newUser, api) => {
+    const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+        
+    return response
+}
+
 module.exports = {
     initialBlogs,
     checkForField,
-    getBlogs
+    getBlogs,
+    errorWithUserCreation
 }
