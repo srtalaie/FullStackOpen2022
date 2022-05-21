@@ -1,8 +1,10 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-
+const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt")
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -39,6 +41,17 @@ describe('Database indexed correctly', () => {
 })
 
 describe('User able to preform basic functions in DB', () => {
+    let token
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHash = await bcrypt.hash("pass1234", 10)
+        const user = await new User({ username: "NEW_USER", passwordHash }).save()
+    
+        const userSignIn = { username: "NEW_USER", id: user.id }
+        return (token = jwt.sign(userSignIn, process.env.SECRET))
+    })
+    
     test('able to create new blog post and blog is saved to DB', async () => {
         const newBlog = {
             title: 'New Blog',
@@ -49,6 +62,7 @@ describe('User able to preform basic functions in DB', () => {
     
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -59,12 +73,25 @@ describe('User able to preform basic functions in DB', () => {
     })
 
     test('if user is able to successfully delete a blog', async () => {
+        const newBlog = {
+            title: 'New Blog',
+            author: 'New Author',
+            url: 'www.blog.com',
+            likes: 9000
+        }
+
+        await api
+            .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
+            .send(newBlog)
+
         const response = await api.get('/api/blogs')
-        const blogToBeDeletedID = response.body[0]._id
+
+        const blogToBeDeletedID = response.body.at(-1)._id
     
         await api
             .delete(`/api/blogs/${blogToBeDeletedID}`)
-    
+            .set("Authorization", `Bearer ${token}`)
     
         const newResponseWithoutDeletedBlog = await Blog.find({ _id: blogToBeDeletedID})
     
@@ -85,9 +112,7 @@ describe('User able to preform basic functions in DB', () => {
     
         expect(likes).toEqual(123)
     })
-})
 
-describe('Missing data is met with the appropriate response', () => {
     test('if likes property is missing, default to 0', async () => {
         const newBlog = {
             title: 'New Blog',
@@ -97,6 +122,7 @@ describe('Missing data is met with the appropriate response', () => {
     
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
     
@@ -112,11 +138,13 @@ describe('Missing data is met with the appropriate response', () => {
     
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(newBadBlog)
             .expect(400)
     
     })
 })
+
 
 afterAll(() => {
   mongoose.connection.close()
