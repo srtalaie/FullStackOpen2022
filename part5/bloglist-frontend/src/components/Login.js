@@ -5,20 +5,20 @@ const Login = ({ handleLogin, username, password, onChangeUsername, onChangePass
             <div>
             username
                 <input
-                type="text"
-                value={username}
-                name="Username"
-                onChange={onChangeUsername}
-            />
+                  type="text"
+                  value={username}
+                  name="Username"
+                  onChange={onChangeUsername}
+                />
             </div>
             <div>
             password
                 <input
-                type="password"
-                value={password}
-                name="Password"
-                onChange={onChangePassword}
-            />
+                  type="password"
+                  value={password}
+                  name="Password"
+                  onChange={onChangePassword}
+                />
             </div>
             <button type="submit">login</button>
         </form>
