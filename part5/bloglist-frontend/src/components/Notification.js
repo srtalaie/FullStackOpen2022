@@ -1,6 +1,6 @@
-const Notification = ({ errorMessage }) => {
+const Notification = ({ message }) => {
   return (
-    <div>{errorMessage}</div>
+    <div>{message}</div>
   )
 }
 
