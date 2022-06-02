@@ -15,9 +15,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
 
   const blogFormRef = useRef()
 
@@ -62,23 +59,11 @@ const App = () => {
     blogService.setToken(null)
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
+  const handleCreateBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
-
-    let newBlog = {
-      title: title,
-      author: author,
-      url: url
-    }
-
     try {
       await blogService.createBlog(newBlog)
-      setAuthor('')
-      setTitle('')
-      setUrl('')
-      setMessage(`A new blog was created: ${title} by ${author}`)
+      setMessage(`A new blog was created: ${newBlog.title} by ${newBlog.author}`)
       blogService.getAll().then(blogs =>
         setBlogs( blogs )
       )
@@ -116,12 +101,6 @@ const App = () => {
               <h2>Create new blog</h2>
               <Togglable buttonLabel="new blog" ref={blogFormRef}>
                 <CreateBlogForm 
-                  title={title}
-                  author={author}
-                  url={url}
-                  onChangeTitle={({ target }) => setTitle(target.value)}
-                  onChangeAuthor={({ target }) => setAuthor(target.value)}
-                  onChangeUrl={({ target }) => setUrl(target.value)}
                   handleCreateBlog={handleCreateBlog}
                 />
               </Togglable>
