@@ -18,10 +18,15 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const setSortedBlogs = async () => {
+    let blogs = await blogService.getAll()
+
+    let sortedBlogs = blogs.sort((a, b) => (b.likes - a.likes))
+    setBlogs(sortedBlogs)
+  }
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    setSortedBlogs()
   }, [])
 
   useEffect(() => {
@@ -64,9 +69,7 @@ const App = () => {
     try {
       await blogService.createBlog(newBlog)
       setMessage(`A new blog was created: ${newBlog.title} by ${newBlog.author}`)
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+      setSortedBlogs()
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -82,9 +85,7 @@ const App = () => {
     try {
       await blogService.updateBlog(blogId, updatedBlog)
       setMessage(`Blog was successfully updated`)
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
+      setSortedBlogs()
       setTimeout(() => {
         setMessage(null)
       }, 5000)
