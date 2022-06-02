@@ -70,7 +70,7 @@ blogRouter.put('/:id', async (request, response) => {
         author: author,
         url: url,
         likes: likes,
-        user: user
+        user: userId
     }
     const updatedBlog = await Blog.findOneAndUpdate({ _id: request.params.id }, blog,  { new: true, runValidators: true, context: 'query' })
 
