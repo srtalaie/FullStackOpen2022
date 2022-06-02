@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import Blog from './components/Blog'
 import Login from './components/Login'
 import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -17,6 +18,8 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -61,6 +64,8 @@ const App = () => {
 
   const handleCreateBlog = async (event) => {
     event.preventDefault()
+
+    blogFormRef.current.toggleVisibility()
 
     let newBlog = {
       title: title,
@@ -109,15 +114,17 @@ const App = () => {
             </div>
             <div>
               <h2>Create new blog</h2>
-              <CreateBlogForm 
-                title={title}
-                author={author}
-                url={url}
-                onChangeTitle={({ target }) => setTitle(target.value)}
-                onChangeAuthor={({ target }) => setAuthor(target.value)}
-                onChangeUrl={({ target }) => setUrl(target.value)}
-                handleCreateBlog={handleCreateBlog}
-              />
+              <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                <CreateBlogForm 
+                  title={title}
+                  author={author}
+                  url={url}
+                  onChangeTitle={({ target }) => setTitle(target.value)}
+                  onChangeAuthor={({ target }) => setAuthor(target.value)}
+                  onChangeUrl={({ target }) => setUrl(target.value)}
+                  handleCreateBlog={handleCreateBlog}
+                />
+              </Togglable>
             </div>
           </>
       } 
