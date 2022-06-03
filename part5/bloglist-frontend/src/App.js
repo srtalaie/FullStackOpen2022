@@ -97,6 +97,24 @@ const App = () => {
     }
   }
 
+  const handleDeleteBlog = async (blogId, blog) => {
+      if (window.confirm(`Do you really want to delete ${blog.title}?`)) {
+        try {
+          await blogService.deleteBlog(blogId)
+          setMessage(`Blog was successfully Deleted`)
+          setSortedBlogs()
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        } catch (exception) {
+          setMessage('Something went wrong')
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+        }
+      }
+  }
+
   return (
     <div>
       <Notification message={message} />
@@ -113,7 +131,7 @@ const App = () => {
               <h2>{user.name} is logged in<span><button onClick={handleLogout}>logout</button></span></h2>
               <h2>blogs</h2>
               {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog}  updateBlog={handleUpdateBlog}/>
+                <Blog key={blog.id} blog={blog}  updateBlog={handleUpdateBlog} removeBlog={handleDeleteBlog}/>
               )}
             </div>
             <div>
