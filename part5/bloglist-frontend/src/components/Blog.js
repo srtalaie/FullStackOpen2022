@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
-  
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -25,7 +25,6 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       likes: blog.likes += 1,
       url: blog.url
     }
-    
     updateBlog(blog._id, updatedBlog)
   }
 
@@ -38,16 +37,16 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   return (
     <div style={blogStyle}>
       {blog.title} - {blog.author} <button onClick={handleVisibility}>{isVisible ? 'hide' : 'view'}</button>
-      {isVisible ? 
+      {isVisible ?
         <div>
           <div>link: {blog.url}</div>
           <div>likes: {blog.likes}<button onClick={handleLikes}>like</button></div>
-        </div> 
+        </div>
         : <></>
       }
       <button onClick={handleRemove}>remove</button>
     </div>
-  ) 
+  )
 }
 
 export default Blog
