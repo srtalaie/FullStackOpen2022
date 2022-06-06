@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import Blog from '../Blog'
 
-test('Blog component renders blog with title and author', () => {
+test('Blog component renders blog with title and author, not Likes/Link initially', () => {
   const blog = {
     title: 'This is a Test Blog',
     author: 'Test Blogger',
