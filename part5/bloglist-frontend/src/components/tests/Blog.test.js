@@ -6,15 +6,23 @@ import Blog from '../Blog'
 
 describe('<Blog />', () => {
   let container
+
   const blog = {
+    _id: 'blogID',
     title: 'This is a Test Blog',
     author: 'Test Blogger',
     url: 'www.url.com',
-    likes: 1
+    user: {
+      username: 'username',
+      name: 'name',
+    },
+    likes: 0
   }
 
+  const mockHandler = jest.fn()
+
   beforeEach(() => {
-    container = render(<Blog blog={blog} />).container
+    container = render(<Blog blog={blog} updateBlog={mockHandler}/>).container
   })
 
   test('Blog component renders blog with title and author, not Likes/Link initially', () => {
@@ -43,5 +51,17 @@ describe('<Blog />', () => {
 
     expect(blogLink).toBeDefined()
     expect(blogLikes).toBeDefined()
+  })
+
+  test('Clicking the like button increases the likes', async () => {
+    const user = userEvent.setup()
+    const viewButton = screen.getByText('view')
+    await user.click(viewButton)
+
+    const likeButton = container.querySelector('.like-btn')
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })

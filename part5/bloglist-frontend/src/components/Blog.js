@@ -40,7 +40,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       {isVisible ?
         <div>
           <div className="blog-link">link: {blog.url}</div>
-          <div className="blog-likes">likes: {blog.likes}<button onClick={handleLikes}>like</button></div>
+          <div className="blog-likes">likes: {blog.likes}<button className="like-btn" onClick={handleLikes}>like</button></div>
         </div>
         : <></>
       }
