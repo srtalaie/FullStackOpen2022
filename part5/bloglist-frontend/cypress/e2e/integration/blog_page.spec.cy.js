@@ -15,13 +15,7 @@ describe('blog page', () => {
     }
     cy.request('POST', 'http://localhost:3003/api/users/', secondUser)
 
-    cy.visit('http://localhost:3000')
-
-    cy.get('#login-btn')
-
-    cy.get('#username').type('groot')
-    cy.get('#password').type('groot')
-    cy.get('#login-btn').click()
+    cy.login({ username: user.username, password: user.password })
   })
 
   it('logged in user can create a new blog', () => {
@@ -39,16 +33,46 @@ describe('blog page', () => {
   })
 
   it('user is able to like a blog', () => {
-    cy.get('.togglabel').contains('new blog').click()
-    cy.get('#title').type('Blog Title')
-    cy.get('#author').type('Blog Author')
-    cy.get('#url').type('www.blog.com')
-
-    cy.get('.create-blog-btn').click()
+    cy.createBlog({
+      title: 'Blog Title',
+      author: 'Blog Author',
+      url: 'www.blog.com'
+    })
 
     cy.get('#view-hide-btn').click()
     cy.get('.blog-likes').contains('0')
     cy.get('.like-btn').click()
     cy.get('.blog-likes').contains('1')
+  })
+
+  it('user that created a blog can delete it', () => {
+    cy.createBlog({
+      title: 'Blog Title',
+      author: 'Blog Author',
+      url: 'www.blog.com'
+    })
+
+    cy.get('#view-hide-btn').click()
+    cy.get('#remove-btn').click()
+    cy.on('window:confirm', () => true)
+
+    cy.get('#notification').contains('Blog was successfully Deleted')
+  })
+
+  it('user that did not create the blog unable to delete it', () => {
+    cy.createBlog({
+      title: 'Blog Title',
+      author: 'Blog Author',
+      url: 'www.blog.com'
+    })
+
+    cy.get('#logout-btn').click()
+    cy.login({ username: 'bloop', password: 'bloop' })
+
+    cy.get('#view-hide-btn').click()
+    cy.get('#remove-btn').click()
+    cy.on('window:confirm', () => true)
+
+    cy.get('#notification').contains('Something went wrong')
   })
 })
