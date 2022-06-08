@@ -84,7 +84,6 @@ const App = () => {
     try {
       await updateBlog(blogId, updatedBlog)
       setMessage('Blog was successfully updated')
-      setSortedBlogs()
       setTimeout(() => {
         setMessage(null)
       }, 5000)
