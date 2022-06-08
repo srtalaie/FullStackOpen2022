@@ -33,4 +33,22 @@ describe('login form', () => {
 
     cy.get('#notification').contains('Wrong credentials')
   })
+
+  it.only('logged in user can create a new blog', () => {
+    cy.get('#username').type('groot')
+    cy.get('#password').type('groot')
+    cy.get('#login-btn').click()
+
+    cy.get('.togglabel').contains('new blog').click()
+    cy.get('#title').type('Blog Title')
+    cy.get('#author').type('Blog Author')
+    cy.get('#url').type('www.blog.com')
+
+    cy.get('.create-blog-btn').click()
+
+    cy.get('#notification').contains('A new blog was created: Blog Title by Blog Author')
+    cy.get('.blog').contains('Blog Title - Blog Author')
+    cy.get('#view-hide-btn')
+    cy.get('#remove-btn')
+  })
 })
