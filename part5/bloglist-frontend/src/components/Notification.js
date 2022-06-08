@@ -1,6 +1,6 @@
 const Notification = ({ message }) => {
   return (
-    <div>{message}</div>
+    <div id="notification">{message}</div>
   )
 }
 
