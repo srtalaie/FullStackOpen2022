@@ -63,7 +63,8 @@ describe('blog page', () => {
     cy.createBlog({
       title: 'Blog Title',
       author: 'Blog Author',
-      url: 'www.blog.com'
+      url: 'www.blog.com',
+      likes: 0
     })
 
     cy.get('#logout-btn').click()
@@ -74,5 +75,30 @@ describe('blog page', () => {
     cy.on('window:confirm', () => true)
 
     cy.get('#notification').contains('Something went wrong')
+  })
+
+  it('blogs are ordered correctly based on likes', () => {
+    cy.createBlog({
+      title: 'Blog with Most',
+      author: 'Blog Author',
+      url: 'www.blog.com',
+      likes: 100
+    })
+    cy.createBlog({
+      title: 'Blog',
+      author: 'Blog Author',
+      url: 'www.blog.com',
+      likes: 99
+    })
+    cy.createBlog({
+      title: 'Blog with Least',
+      author: 'Blog Author',
+      url: 'www.blog.com',
+      likes: 1
+    })
+
+    cy.get('.blog').eq(0).should('contain', 'Blog with Most')
+    cy.get('.blog').eq(1).should('contain', 'Blog')
+    cy.get('.blog').eq(2).should('contain', 'Blog with Least')
   })
 })
