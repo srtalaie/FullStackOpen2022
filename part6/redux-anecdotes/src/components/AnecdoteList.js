@@ -3,6 +3,7 @@ import { upVote } from '../reducers/anecdoteReducer'
 import { createNotif, removeNotif } from '../reducers/notificationReducer'
 
 import Notification from './Notification'
+import Filter from './Filter'
 
 const Anecdote = ({ anecdote, handleClick }) => {
     return(
@@ -21,6 +22,9 @@ const Anecdote = ({ anecdote, handleClick }) => {
 const AnecdoteList = () => {
     const anecdotes = useSelector((state) => state.anecdotes.slice().sort((a, b) => (b.votes - a.votes)))
     const dispatch = useDispatch()
+
+    const filteredTerm = useSelector((state) => state.filter)
+    const regex =  new RegExp(filteredTerm, 'i')
     
     const handleUpVote = (anecdote) => {
       dispatch(upVote(anecdote.id))
@@ -35,8 +39,9 @@ const AnecdoteList = () => {
       <Notification 
         message={useSelector((state) => state.notification)}
       />
+      <Filter />
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {anecdotes.filter((anecdote) => regex.test(anecdote.content)).map((anecdote) =>
         <Anecdote 
             anecdote={anecdote}
             handleClick={() => { handleUpVote(anecdote)} }
