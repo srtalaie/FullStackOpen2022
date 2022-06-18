@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux'
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = ''
@@ -10,9 +9,14 @@ const notificationSlice = createSlice({
         createNotif: (state, action) => {
             const message = action.payload
             state = message
+            return state
+        },
+        removeNotif: (state) => {
+            state = ''
+            return state
         }
     }
 })
 
-export const { createNotif } = notificationSlice.actions
+export const { createNotif, removeNotif } = notificationSlice.actions
 export default notificationSlice.reducer
