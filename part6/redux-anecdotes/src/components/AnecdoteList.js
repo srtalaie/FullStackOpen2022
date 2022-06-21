@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { upVote } from '../reducers/anecdoteReducer'
+import { upVote, upVoteAnecdote } from '../reducers/anecdoteReducer'
 import { createNotif, removeNotif } from '../reducers/notificationReducer'
 
 import Notification from './Notification'
@@ -27,7 +27,7 @@ const AnecdoteList = () => {
     const regex =  new RegExp(filteredTerm, 'i')
     
     const handleUpVote = (anecdote) => {
-      dispatch(upVote(anecdote.id))
+      dispatch(upVoteAnecdote(anecdote.id))
       dispatch(createNotif(`you voted '${anecdote.content}'`))
       setTimeout(() => {
         dispatch(removeNotif())
