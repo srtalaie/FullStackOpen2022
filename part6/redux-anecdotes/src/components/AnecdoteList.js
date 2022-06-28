@@ -3,7 +3,7 @@ import { upVoteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 import ConnectedNotifications from './Notification'
-import Filter from './Filter'
+import ConnectedFilter from './Filter'
 
 const Anecdote = ({ anecdote, handleClick }) => {
     return(
@@ -36,7 +36,7 @@ const AnecdoteList = () => {
       <ConnectedNotifications 
         message={useSelector((state) => state.notification)}
       />
-      <Filter />
+      <ConnectedFilter />
       <h2>Anecdotes</h2>
       {anecdotes.filter((anecdote) => regex.test(anecdote.content)).map((anecdote) =>
         <Anecdote 
