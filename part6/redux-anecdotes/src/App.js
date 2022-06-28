@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import { intitalizeAnecdotes } from './reducers/anecdoteReducer'
 
-import AnecdoteForm from './components/AnecdoteForm'
+import ConnectedAnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 
 const App = () => {
@@ -16,7 +16,7 @@ useEffect(() => {
   return (
     <div>
       <AnecdoteList />
-      <AnecdoteForm />
+      <ConnectedAnecdoteForm />
     </div>
   )
 }
