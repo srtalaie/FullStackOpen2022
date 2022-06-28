@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { upVoteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-import Notification from './Notification'
+import ConnectedNotifications from './Notification'
 import Filter from './Filter'
 
 const Anecdote = ({ anecdote, handleClick }) => {
@@ -33,7 +33,7 @@ const AnecdoteList = () => {
 
   return (
     <div>
-      <Notification 
+      <ConnectedNotifications 
         message={useSelector((state) => state.notification)}
       />
       <Filter />
