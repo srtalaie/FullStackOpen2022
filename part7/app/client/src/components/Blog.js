@@ -1,7 +1,13 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
+import { updateBlog, deleteBlog } from '../services/blogs'
+import { setNotification } from '../reducers/notificationReducer'
+
+const Blog = ({ blog }) => {
   const [isVisible, setIsVisible] = useState(false)
+
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -15,6 +21,26 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     setIsVisible(!isVisible)
   }
 
+  const handleUpdateBlog = async (blogId, updatedBlog) => {
+    try {
+      await updateBlog(blogId, updatedBlog)
+      dispatch(setNotification('Blog was successfully updated'))
+    } catch (exception) {
+      dispatch(setNotification('Something went wrong'))
+    }
+  }
+
+  const handleDeleteBlog = async (blogId, blog) => {
+    if (window.confirm(`Do you really want to delete ${blog.title}?`)) {
+      try {
+        await deleteBlog(blogId)
+        dispatch(setNotification('Blog was successfully Deleted'))
+      } catch (exception) {
+        dispatch(setNotification('Something went wrong'))
+      }
+    }
+  }
+
   const handleLikes = (event) => {
     event.preventDefault()
 
@@ -25,13 +51,13 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       likes: blog.likes += 1,
       url: blog.url
     }
-    updateBlog(blog._id, updatedBlog)
+    handleUpdateBlog(blog._id, updatedBlog)
   }
 
   const handleRemove = (event) => {
     event.preventDefault()
 
-    removeBlog(blog._id, blog)
+    handleDeleteBlog(blog._id, blog)
   }
 
   return (

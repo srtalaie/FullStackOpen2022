@@ -6,13 +6,13 @@ import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Togglable'
 
-import { getAll, createBlog, deleteBlog, setToken, updateBlog } from './services/blogs'
+import { getAll, createBlog, setToken } from './services/blogs'
 import login from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState('')
   const [username, setUsername] = useState('')
+  const [message, setMessage] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
@@ -27,7 +27,7 @@ const App = () => {
 
   useEffect(() => {
     setSortedBlogs()
-  }, [])
+  }, [blogs])
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBlogUser')
@@ -80,39 +80,6 @@ const App = () => {
     }
   }
 
-  const handleUpdateBlog = async (blogId, updatedBlog) => {
-    try {
-      await updateBlog(blogId, updatedBlog)
-      setMessage('Blog was successfully updated')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    } catch (exception) {
-      setMessage('Something went wrong')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }
-  }
-
-  const handleDeleteBlog = async (blogId, blog) => {
-    if (window.confirm(`Do you really want to delete ${blog.title}?`)) {
-      try {
-        await deleteBlog(blogId)
-        setMessage('Blog was successfully Deleted')
-        setSortedBlogs()
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
-      } catch (exception) {
-        setMessage('Something went wrong')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
-      }
-    }
-  }
-
   return (
     <div>
       <Notification message={message} />
@@ -129,7 +96,7 @@ const App = () => {
             <h2>{user.name} is logged in<span><button id="logout-btn" onClick={handleLogout}>logout</button></span></h2>
             <h2>blogs</h2>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlog} removeBlog={handleDeleteBlog}/>
+              <Blog key={blog.id} blog={blog} />
             )}
           </div>
           <div>
