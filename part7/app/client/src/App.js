@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Blog from './components/Blog'
 import Login from './components/Login'
@@ -6,11 +7,13 @@ import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Togglable'
 
-import { getAll, createBlog, setToken } from './services/blogs'
+import { createBlog, setToken } from './services/blogs'
+import { initializeBlogs } from './reducers/blogReducer'
+
 import login from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector((state) => state.blogs.slice().sort((a, b) => (b.likes - a.likes)))
   const [username, setUsername] = useState('')
   const [message, setMessage] = useState('')
   const [password, setPassword] = useState('')
@@ -18,16 +21,11 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const setSortedBlogs = async () => {
-    let blogs = await getAll()
-
-    let sortedBlogs = blogs.sort((a, b) => (b.likes - a.likes))
-    setBlogs(sortedBlogs)
-  }
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    setSortedBlogs()
-  }, [blogs])
+    dispatch(initializeBlogs())
+  }, [blogs, dispatch])
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBlogUser')
@@ -68,7 +66,6 @@ const App = () => {
     try {
       await createBlog(newBlog)
       setMessage(`A new blog was created: ${newBlog.title} by ${newBlog.author}`)
-      setSortedBlogs()
       setTimeout(() => {
         setMessage(null)
       }, 5000)

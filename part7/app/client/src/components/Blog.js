@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { updateBlog, deleteBlog } from '../services/blogs'
+import { deleteBlog } from '../services/blogs'
+import { likeABlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = ({ blog }) => {
@@ -21,15 +22,6 @@ const Blog = ({ blog }) => {
     setIsVisible(!isVisible)
   }
 
-  const handleUpdateBlog = async (blogId, updatedBlog) => {
-    try {
-      await updateBlog(blogId, updatedBlog)
-      dispatch(setNotification('Blog was successfully updated'))
-    } catch (exception) {
-      dispatch(setNotification('Something went wrong'))
-    }
-  }
-
   const handleDeleteBlog = async (blogId, blog) => {
     if (window.confirm(`Do you really want to delete ${blog.title}?`)) {
       try {
@@ -41,22 +33,13 @@ const Blog = ({ blog }) => {
     }
   }
 
-  const handleLikes = (event) => {
-    event.preventDefault()
-
-    let updatedBlog = {
-      title: blog.title,
-      author: blog.author,
-      userId: String(blog.user.id),
-      likes: blog.likes += 1,
-      url: blog.url
-    }
-    handleUpdateBlog(blog._id, updatedBlog)
+  const handleLikes = (blog) => {
+    dispatch(likeABlog(blog._id))
+    dispatch(setNotification(`You liked ${blog.title}`))
   }
 
   const handleRemove = (event) => {
     event.preventDefault()
-
     handleDeleteBlog(blog._id, blog)
   }
 
@@ -66,7 +49,7 @@ const Blog = ({ blog }) => {
       {isVisible ?
         <div>
           <div className="blog-link">link: {blog.url}</div>
-          <div className="blog-likes">likes: {blog.likes}<button className="like-btn" onClick={handleLikes}>like</button></div>
+          <div className="blog-likes">likes: {blog.likes}<button className="like-btn" onClick={() => { handleLikes(blog) }}>like</button></div>
         </div>
         : <></>
       }

@@ -26,6 +26,16 @@ const updateBlog = async (id, newBlog) => {
   return response.data
 }
 
+const likeBlog = async (id) => {
+  const blogToLike = await axios.get(`${baseUrl}/${id}`)
+  console.log(blogToLike.data[0])
+  const likedBlog = { ...blogToLike.data,
+    likes: blogToLike.data[0].likes += 1
+  }
+  const response = await axios.put(`${baseUrl}/${id}`, likedBlog)
+  return response.data
+}
+
 const deleteBlog = async (id) => {
   const config = {
     headers: { Authorization: token },
@@ -35,4 +45,4 @@ const deleteBlog = async (id) => {
   return response.data
 }
 
-export { getAll, setToken, createBlog, updateBlog, deleteBlog }
+export { getAll, setToken, createBlog, updateBlog, deleteBlog, likeBlog }
