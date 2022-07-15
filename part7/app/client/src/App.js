@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Togglable'
 
-import { createBlog, setToken } from './services/blogs'
+import { setToken } from './services/blogs'
 import { initializeBlogs } from './reducers/blogReducer'
 
 import login from './services/login'
@@ -61,22 +61,6 @@ const App = () => {
     setToken(null)
   }
 
-  const handleCreateBlog = async (newBlog) => {
-    blogFormRef.current.toggleVisibility()
-    try {
-      await createBlog(newBlog)
-      setMessage(`A new blog was created: ${newBlog.title} by ${newBlog.author}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    } catch (exception) {
-      setMessage('Something went wrong')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    }
-  }
-
   return (
     <div>
       <Notification message={message} />
@@ -99,9 +83,7 @@ const App = () => {
           <div>
             <h2>Create new blog</h2>
             <Togglable buttonLabel="new blog" ref={blogFormRef}>
-              <CreateBlogForm
-                handleCreateBlog={handleCreateBlog}
-              />
+              <CreateBlogForm />
             </Togglable>
           </div>
         </>
