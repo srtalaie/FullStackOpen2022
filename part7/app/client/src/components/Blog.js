@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { deleteBlog } from '../services/blogs'
-import { likeABlog } from '../reducers/blogReducer'
+import { likeABlog, deleteABlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = ({ blog }) => {
@@ -22,25 +21,20 @@ const Blog = ({ blog }) => {
     setIsVisible(!isVisible)
   }
 
-  const handleDeleteBlog = async (blogId, blog) => {
-    if (window.confirm(`Do you really want to delete ${blog.title}?`)) {
-      try {
-        await deleteBlog(blogId)
-        dispatch(setNotification('Blog was successfully Deleted'))
-      } catch (exception) {
-        dispatch(setNotification('Something went wrong'))
-      }
-    }
-  }
-
   const handleLikes = (blog) => {
     dispatch(likeABlog(blog._id))
     dispatch(setNotification(`You liked ${blog.title}`))
   }
 
-  const handleRemove = (event) => {
-    event.preventDefault()
-    handleDeleteBlog(blog._id, blog)
+  const handleRemove = async (blog) => {
+    if (window.confirm(`Do you really want to delete ${blog.title}?`)) {
+      try {
+        dispatch(deleteABlog(blog._id))
+        dispatch(setNotification('Blog was successfully Deleted'))
+      } catch (exception) {
+        dispatch(setNotification('Something went wrong'))
+      }
+    }
   }
 
   return (
@@ -53,7 +47,7 @@ const Blog = ({ blog }) => {
         </div>
         : <></>
       }
-      <button id="remove-btn" onClick={handleRemove}>remove</button>
+      <button id="remove-btn" onClick={() => { handleRemove(blog) }}>remove</button>
     </div>
   )
 }

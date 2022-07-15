@@ -28,7 +28,6 @@ const updateBlog = async (id, newBlog) => {
 
 const likeBlog = async (id) => {
   const blogToLike = await axios.get(`${baseUrl}/${id}`)
-  console.log(blogToLike.data[0])
   const likedBlog = { ...blogToLike.data,
     likes: blogToLike.data[0].likes += 1
   }
