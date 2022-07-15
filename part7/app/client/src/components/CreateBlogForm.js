@@ -17,6 +17,7 @@ const CreateBlogForm = () => {
       author: author,
       url: url
     }
+
     try {
       dispatch(makeBlog(newBlog))
       dispatch(setNotification(`A new blog was created: ${newBlog.title} by ${newBlog.author}`))
