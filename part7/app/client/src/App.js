@@ -6,10 +6,10 @@ import Login from './components/Login'
 import Notification from './components/Notification'
 import CreateBlogForm from './components/CreateBlogForm'
 import Togglable from './components/Togglable'
+import UserTable from './components/UserTable'
 
 import { setToken } from './services/blogs'
 import { initializeBlogs } from './reducers/blogReducer'
-
 import { initializeUsers } from './reducers/userReducer'
 
 import login from './services/login'
@@ -26,8 +26,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(initializeUsers())
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [blogs, dispatch])
 
   useEffect(() => {
@@ -89,6 +89,7 @@ const App = () => {
               <CreateBlogForm />
             </Togglable>
           </div>
+          <UserTable />
         </>
       }
     </div>
