@@ -1,13 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-
 import { Routes, Route } from 'react-router-dom'
 
 import Login from './components/Login'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
-import CreateBlogForm from './components/CreateBlogForm'
-import Togglable from './components/Togglable'
+import User from './components/User'
 import UserTable from './components/UserTable'
 
 import { setToken } from './services/blogs'
@@ -81,6 +79,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<BlogList />} />
             <Route path="/users" element={<UserTable />} />
+            <Route path="users/:id" element={<User />} />
           </Routes>
         </>
       }
