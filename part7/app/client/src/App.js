@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Routes, Route } from 'react-router-dom'
 
@@ -8,6 +8,8 @@ import BlogList from './components/BlogList'
 import User from './components/User'
 import UserTable from './components/UserTable'
 import Blog from './components/Blog'
+import Togglable from './components/Togglable'
+import CreateBlogForm from './components/CreateBlogForm'
 
 import { setToken } from './services/blogs'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -22,6 +24,8 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     dispatch(initializeBlogs())
@@ -77,6 +81,10 @@ const App = () => {
           <div>
             <h2>{user.name} is logged in<span><button id="logout-btn" onClick={handleLogout}>logout</button></span></h2>
           </div>
+          <h2>Create new blog</h2>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <CreateBlogForm />
+          </Togglable>
           <Routes>
             <Route path="/" element={<BlogList />} />
             <Route path="/users" element={<UserTable />} />

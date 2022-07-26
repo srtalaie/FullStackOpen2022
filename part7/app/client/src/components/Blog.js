@@ -5,11 +5,11 @@ import { likeABlog, deleteABlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = () => {
-  let { id } = useParams
+  let { id } = useParams()
 
   const dispatch = useDispatch()
 
-  let blog = useSelector((state) => state.blogs.find(blog => blog.id === id))
+  const blog = useSelector((state) => state.blogs.find(blog => blog._id === id))
 
   const handleLikes = (blog) => {
     dispatch(likeABlog(blog._id))
@@ -32,7 +32,7 @@ const Blog = () => {
   }
 
   return (
-    <div className="blog">
+    <div>
       <p>{blog.title} - {blog.author}</p>
       <div>
         <div className="blog-link">link: {blog.url}</div>
