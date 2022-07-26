@@ -6,7 +6,9 @@ const User = () => {
 
   const user = useSelector((state) => state.users.find(user => user.id === id))
 
-  console.log(user)
+  if (!user) {
+    return null
+  }
 
   return (
     <div>

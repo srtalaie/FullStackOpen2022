@@ -1,25 +1,15 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import { likeABlog, deleteABlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const Blog = ({ blog }) => {
-  const [isVisible, setIsVisible] = useState(false)
+const Blog = () => {
+  let { id } = useParams
 
   const dispatch = useDispatch()
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
-  const handleVisibility = () => {
-    setIsVisible(!isVisible)
-  }
+  let blog = useSelector((state) => state.blogs.find(blog => blog.id === id))
 
   const handleLikes = (blog) => {
     dispatch(likeABlog(blog._id))
@@ -37,16 +27,17 @@ const Blog = ({ blog }) => {
     }
   }
 
+  if (!blog) {
+    return null
+  }
+
   return (
-    <div className="blog" style={blogStyle}>
-      {blog.title} - {blog.author} <button id="view-hide-btn" onClick={handleVisibility}>{isVisible ? 'hide' : 'view'}</button>
-      {isVisible ?
-        <div>
-          <div className="blog-link">link: {blog.url}</div>
-          <div className="blog-likes">likes: {blog.likes}<button className="like-btn" onClick={() => { handleLikes(blog) }}>like</button></div>
-        </div>
-        : <></>
-      }
+    <div className="blog">
+      <p>{blog.title} - {blog.author}</p>
+      <div>
+        <div className="blog-link">link: {blog.url}</div>
+        <div className="blog-likes">likes: {blog.likes}<button className="like-btn" onClick={() => { handleLikes(blog) }}>like</button></div>
+      </div>
       <button id="remove-btn" onClick={() => { handleRemove(blog) }}>remove</button>
     </div>
   )

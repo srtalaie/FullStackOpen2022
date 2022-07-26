@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import User from './components/User'
 import UserTable from './components/UserTable'
+import Blog from './components/Blog'
 
 import { setToken } from './services/blogs'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -80,6 +81,7 @@ const App = () => {
             <Route path="/" element={<BlogList />} />
             <Route path="/users" element={<UserTable />} />
             <Route path="users/:id" element={<User />} />
+            <Route path="/blogs/:id" element={<Blog />} />
           </Routes>
         </>
       }
