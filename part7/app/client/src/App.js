@@ -10,6 +10,8 @@ import Togglable from './components/Togglable'
 import { setToken } from './services/blogs'
 import { initializeBlogs } from './reducers/blogReducer'
 
+import { initializeUsers } from './reducers/userReducer'
+
 import login from './services/login'
 
 const App = () => {
@@ -24,6 +26,7 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    dispatch(initializeUsers())
     dispatch(initializeBlogs())
   }, [blogs, dispatch])
 
