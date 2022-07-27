@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux'
 import { makeBlog } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
+import { Button, TextField } from '@mui/material'
+
 const CreateBlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -33,9 +35,9 @@ const CreateBlogForm = () => {
   return (
     <form onSubmit={addBlog}>
       <div>
-                title
-        <input
-          type="text"
+        <TextField
+          variant="standard"
+          label="title"
           value={title}
           name="Title"
           id="title"
@@ -44,9 +46,9 @@ const CreateBlogForm = () => {
         />
       </div>
       <div>
-                author
-        <input
-          type="text"
+        <TextField
+          variant="standard"
+          label="author"
           value={author}
           name="Author"
           id="author"
@@ -55,9 +57,9 @@ const CreateBlogForm = () => {
         />
       </div>
       <div>
-                url
-        <input
-          type="text"
+        <TextField
+          variant="standard"
+          label="url"
           value={url}
           name="URL"
           id="url"
@@ -65,7 +67,7 @@ const CreateBlogForm = () => {
           onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button className="create-blog-btn" type="submit">Create</button>
+      <Button type="submit">Create</Button>
     </form>
   )
 }

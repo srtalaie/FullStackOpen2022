@@ -5,6 +5,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { likeABlog, deleteABlog, addAComment } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
+import { Button } from '@mui/material'
+
 const Blog = () => {
   const [comment, setComment] = useState('')
   const [commentDate, setCommentDate] = useState(null)
@@ -51,12 +53,12 @@ const Blog = () => {
       <p>{blog.title} - {blog.author}</p>
       <div>
         <div className="blog-link">link: <a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a></div>
-        <div className="blog-likes">likes: {blog.likes}<button className="like-btn" onClick={handleLikes}>like</button></div>
+        <div className="blog-likes">likes: {blog.likes}<Button className="like-btn" onClick={handleLikes}>like</Button></div>
       </div>
       <div>
         <h3>Comments</h3>
         <input type="text" name="comment" value={comment} onChange={handleChange}></input>
-        <button onClick={handleComment}>Add Comment</button>
+        <Button onClick={handleComment}>Add Comment</Button>
         <div>
           {blog.comments.length === 0 ?
             <div>No comments yet</div> :
@@ -66,7 +68,7 @@ const Blog = () => {
           }
         </div>
       </div>
-      <button id="remove-btn" onClick={handleRemove}>remove</button>
+      <Button id="remove-btn" onClick={handleRemove}>remove</Button>
     </div>
   )
 }

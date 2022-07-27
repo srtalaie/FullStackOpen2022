@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom'
 
-const padding = {
-  paddingRight: 5
-}
+import { Button, Box, AppBar, Typography } from '@mui/material'
 
 const NavMenu = ({ name, handleLogout }) => {
   return (
-    <div>
-      <Link to="/" style={padding}>blogs</Link>
-      <Link to="/users" style={padding}>users</Link>
-      <h2>{name} is logged in<span><button id="logout-btn" onClick={handleLogout}>logout</button></span></h2>
-    </div>
+    <Box>
+      <AppBar position="static">
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+          <Button><Link to="/" style={{ textDecoration: 'none', color: 'white' }} >blogs</Link></Button>
+          <Button><Link to="/users" style={{ textDecoration: 'none', color: 'white' }} >users</Link></Button>
+          <Typography variant="h6">{name} is logged in<span><Button color="warning" variant="text" id="logout-btn" onClick={handleLogout}>logout</Button></span></Typography>
+        </Box>
+      </AppBar>
+    </Box>
   )
 }
 

@@ -18,6 +18,8 @@ import { initializeUsers } from './reducers/userReducer'
 import login from './services/login'
 import NavMenu from './components/NavMenu'
 
+import { Container } from '@mui/material'
+
 const App = () => {
   const [username, setUsername] = useState('')
   const [message, setMessage] = useState('')
@@ -68,7 +70,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <Notification message={message} />
       {user === null ?
         <Login
@@ -94,7 +96,7 @@ const App = () => {
           </Routes>
         </>
       }
-    </div>
+    </Container>
   )
 }
 

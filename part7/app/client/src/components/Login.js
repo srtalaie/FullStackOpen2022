@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
 
+import { Button, TextField, Box } from '@mui/material'
+
 const Login = ({ handleLogin, username, password, onChangeUsername, onChangePassword }) => {
   Login.propTypes = {
     handleLogin: PropTypes.func.isRequired,
@@ -12,27 +14,27 @@ const Login = ({ handleLogin, username, password, onChangeUsername, onChangePass
   return (
     <>
       <form onSubmit={handleLogin}>
-        <div>
-            username
-          <input
-            type="text"
+        <Box>
+          <TextField
+            variant="standard"
+            label="username"
             value={username}
             name="Username"
             id="username"
             onChange={onChangeUsername}
           />
-        </div>
-        <div>
-            password
-          <input
+        </Box>
+        <Box>
+          <TextField
             type="password"
+            label="password"
             value={password}
             name="Password"
             id="password"
             onChange={onChangePassword}
           />
-        </div>
-        <button type="submit" id="login-btn">login</button>
+        </Box>
+        <Button type="submit" id="login-btn">login</Button>
       </form>
     </>
   )
