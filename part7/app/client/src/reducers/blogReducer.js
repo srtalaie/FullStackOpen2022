@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getAll, createBlog, updateBlog, deleteBlog } from '../services/blogs'
+import { getAll, createBlog, updateBlog, deleteBlog, addComment } from '../services/blogs'
 
 const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
-    like: (state, action) => {
+    updateABlog: (state, action) => {
       const updatedBlog = action.payload
       const id = updatedBlog._id
       return state.map(blog => blog._id !== id ? blog : updatedBlog)
@@ -18,12 +18,12 @@ const blogSlice = createSlice({
     },
     removeBlog: (state, action) => {
       let id = action.payload
-      state = state.filter(blog => blog.id === id)
+      return state.filter(blog => blog._id !== id)
     }
   }
 })
 
-export const { like, appendBlog, setBlogs, removeBlog } = blogSlice.actions
+export const { updateABlog, appendBlog, setBlogs, removeBlog } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -42,7 +42,7 @@ export const makeBlog = (content) => {
 export const likeABlog = (id, blog) => {
   return async dispatch => {
     const likedBlog = await updateBlog(id, blog)
-    dispatch(like(likedBlog))
+    dispatch(updateABlog(likedBlog))
   }
 }
 
@@ -50,6 +50,13 @@ export const deleteABlog = (id) => {
   return async dispatch => {
     await deleteBlog(id)
     dispatch(removeBlog(id))
+  }
+}
+
+export const addAComment = (id, comment) => {
+  return async dispacth => {
+    const commentedBlog = await addComment(id, comment)
+    dispacth(updateABlog(commentedBlog))
   }
 }
 

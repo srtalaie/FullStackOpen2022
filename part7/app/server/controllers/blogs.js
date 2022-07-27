@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const blog = require('../models/blog')
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -63,13 +64,14 @@ blogRouter.delete('/:id', async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-    const { userId, title, author, url, likes } = request.body
+    const { userId, title, author, url, likes, comments } = request.body
     const user = await User.findById(userId)
     const blog = {
         title: title,
         author: author,
         url: url,
         likes: likes,
+        comments: comments,
         user: userId
     }
     const updatedBlog = await Blog.findOneAndUpdate({ _id: request.params.id }, blog,  { new: true, runValidators: true, context: 'query' })
