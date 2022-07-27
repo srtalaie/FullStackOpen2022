@@ -16,6 +16,7 @@ import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
 
 import login from './services/login'
+import NavMenu from './components/NavMenu'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -79,7 +80,7 @@ const App = () => {
         />
         : <>
           <div>
-            <h2>{user.name} is logged in<span><button id="logout-btn" onClick={handleLogout}>logout</button></span></h2>
+            <NavMenu name={user.name} handleLogout={handleLogout} />
           </div>
           <h2>Create new blog</h2>
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
