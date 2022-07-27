@@ -30,7 +30,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeBlogs())
     dispatch(initializeUsers())
-  }, [dispatch])
+  })
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInBlogUser')
@@ -87,9 +87,9 @@ const App = () => {
           </Togglable>
           <Routes>
             <Route path="/" element={<BlogList />} />
+            <Route path="/blogs/:id" element={<Blog />} />
             <Route path="/users" element={<UserTable />} />
             <Route path="users/:id" element={<User />} />
-            <Route path="/blogs/:id" element={<Blog />} />
           </Routes>
         </>
       }
