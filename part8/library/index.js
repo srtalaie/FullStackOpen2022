@@ -122,6 +122,9 @@ const resolvers = {
         return  books.filter(book => book.author === args.author)
       } else if (args.genre && !args.name) {
         return books.filter((book) => book.genres.includes(args.genre))
+      } else {
+        let auhtorsBooks = books.filter(book => book.author === args.author)
+        return auhtorsBooks.filter((book) => book.genres.includes(args.genre))
       }
     } ,
     allAuthors: () => authors.map(author => ({ name: author.name, bookCount: books.filter(book => book.author === author.name).length}))
