@@ -7,4 +7,5 @@
 [Part 4](https://github.com/srtalaie/FullStackOpen2022/tree/master/part4)\
 [Part 5](https://github.com/srtalaie/FullStackOpen2022/tree/master/part5)\
 [Part 6](https://github.com/srtalaie/FullStackOpen2022/tree/master/part6)\
-[Part 7](https://github.com/srtalaie/FullStackOpen2022/tree/master/part7)
+[Part 7](https://github.com/srtalaie/FullStackOpen2022/tree/master/part7)\
+[Part 8](https://github.com/srtalaie/FullStackOpen2022/tree/master/part8)
