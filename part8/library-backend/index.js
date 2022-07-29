@@ -157,7 +157,6 @@ const resolvers = {
 			}
 			const book = { ...args, id: uuid() }
 			books = books.concat(book)
-			console.log("=========", books)
 			return book
 		},
 		editAuthor: (root, args) => {
