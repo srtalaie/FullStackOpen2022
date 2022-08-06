@@ -1,12 +1,15 @@
 require("dotenv").config()
 const jwt = require("jsonwebtoken")
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core")
+const http = require("http")
+const express = require("express")
 
 const {
 	ApolloServer,
 	UserInputError,
 	AuthenticationError,
 	gql,
-} = require("apollo-server")
+} = require("apollo-server-express")
 
 const mongoose = require("mongoose")
 const Author = require("./models/Author")
@@ -16,19 +19,28 @@ const User = require("./models/User")
 const MONGODB_URI = process.env.MONGODB_URI
 const JWT_SECRET = process.env.JWT_SECRET
 
+mongoose
+	.connect(MONGODB_URI)
+	.then(() => {
+		console.log("connected to MongoDB")
+	})
+	.catch((error) => {
+		console.log("error connection to MongoDB:", error.message)
+	})
+
 const typeDefs = gql`
 	type Author {
 		name: String!
 		id: ID!
 		born: Int
-		bookCount: Int!
+		bookCount: [String]!
 	}
 	type Book {
 		title: String!
 		published: Int!
 		author: Author!
 		id: ID!
-		genres: [String!]
+		genres: [String!]!
 	}
 	type User {
 		username: String!
@@ -50,7 +62,7 @@ const typeDefs = gql`
 			title: String!
 			published: Int!
 			author: String!
-			genres: [String!]
+			genres: [String!]!
 		): Book!
 		editAuthor(name: String!, setBornTo: Int!): Author
 		createUser(username: String!, favoriteGenre: String!): User
@@ -62,10 +74,31 @@ const resolvers = {
 	Query: {
 		bookCount: async () => await Book.collection.countDocuments(),
 		authorCount: async () => await Author.collection.countDocuments(),
-		allBooks: async () => await Book.find({}).populate("author"),
 		allAuthors: async () => await Author.find({}),
 		me: (root, args, context) => {
 			return context.currentUser
+		},
+		allBooks: async (root, args) => {
+			if (args.author && args.genre) {
+				const author = await Author.findOne({ name: args.author })
+				return Book.find({
+					$and: [
+						{ author: { $in: author.id } },
+						{ genres: { $in: args.genre } },
+					],
+				}).populate("author")
+			}
+
+			if (args.author) {
+				const author = await Author.findOne({ name: args.author })
+				return Book.find({ author: { $in: author.id } }).populate("author")
+			}
+
+			if (args.genre) {
+				return Book.find({ genres: { $in: args.genre } }).populate("author")
+			}
+
+			return Book.find({}).populate("author")
 		},
 	},
 	Mutation: {
@@ -77,24 +110,16 @@ const resolvers = {
 			}
 			try {
 				let author = await Author.findOne({ name: args.author })
+
 				if (!author) {
-					try {
-						author = new Author({ name: args.author })
-						await author.save()
-					} catch (error) {
-						throw new UserInputError(error.message, {
-							invalidArgs: args,
-						})
-					}
+					author = new Author({ name: args.author })
 				}
-				try {
-					const book = new Book({ ...args, author: author.id })
-					return await book.save()
-				} catch (error) {
-					throw new UserInputError(error.message, {
-						invalidArgs: args,
-					})
-				}
+
+				const book = new Book({ ...args, author: author.id })
+				await book.save()
+				author.bookCount = author.bookCount.concat(book.id)
+				await author.save()
+				return book
 			} catch (error) {
 				throw new UserInputError(error.message, {
 					invalidArgs: args,
@@ -150,29 +175,47 @@ const resolvers = {
 	},
 }
 
-const server = new ApolloServer({
-	typeDefs,
-	resolvers,
-	context: async ({ req }) => {
-		const auth = req ? req.headers.authorization : null
-		if (auth && auth.toLowerCase().startsWith("bearer ")) {
-			const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
-			const currentUser = await User.findById(decodedToken.id)
-			return { currentUser }
-		}
-	},
-})
+const serverStart = async () => {
+	const app = express()
+	const httpServer = http.createServer(app)
 
-server.listen().then(({ url }) => {
-	console.log(`Server ready at ${url}`)
-	console.log("connecting to", MONGODB_URI)
+	const server = new ApolloServer({
+		typeDefs,
+		resolvers,
+		context: async ({ req }) => {
+			const auth = req ? req.headers.authorization : null
+			if (auth && auth.toLowerCase().startsWith("bearer ")) {
+				const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
+				const currentUser = await User.findById(decodedToken.id)
+				return { currentUser }
+			}
+		},
+		plugins: [
+			ApolloServerPluginDrainHttpServer({ httpServer }),
+			{
+				async serverWillStart() {
+					return {
+						async drainServer() {
+							server.close()
+						},
+					}
+				},
+			},
+		],
+	})
 
-	mongoose
-		.connect(MONGODB_URI)
-		.then(() => {
-			console.log("connected to MongoDB")
-		})
-		.catch((error) => {
-			console.log("error connection to MongoDB:", error.message)
-		})
-})
+	await server.start()
+
+	server.applyMiddleware({
+		app,
+		path: "/",
+	})
+
+	const PORT = 4000
+
+	httpServer.listen(PORT, () =>
+		console.log(`Server is now running on http://localhost:${PORT}`)
+	)
+}
+
+serverStart()

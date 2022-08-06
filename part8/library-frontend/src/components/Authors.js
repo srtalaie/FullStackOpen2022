@@ -27,8 +27,6 @@ const Authors = (props) => {
 		return null
 	}
 
-	console.log(authors)
-
 	return (
 		<div>
 			{authors.loading ? (
@@ -48,7 +46,7 @@ const Authors = (props) => {
 									<tr key={author.name}>
 										<td>{author.name}</td>
 										<td>{author.born}</td>
-										<td>{author.bookCount}</td>
+										<td>{author.bookCount.length}</td>
 									</tr>
 								))}
 							</tbody>
