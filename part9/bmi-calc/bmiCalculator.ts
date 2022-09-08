@@ -39,16 +39,31 @@ const bmiCalculator = (height: number, weight: number) => {
     message = "Overwieght (Class III)"
   }
   
-  console.log("BMI: " + result, message)
+  return `BMI: ${result}, ${message}`
 }
 
 try {
   const { height, weight } = parseArguments(process.argv)
-  bmiCalculator(height, weight)
+  console.log(bmiCalculator(height, weight))
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.'
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message
   }
   console.log(errorMessage)
+}
+
+export function runBMICalc(h: number, w: number) {
+  if (isNaN(h) || isNaN(w)) {
+    return "malformed parameters"
+  }
+  try {
+    return bmiCalculator(h, w)
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened.'
+    if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message
+  }
+    return errorMessage
+  }
 }
