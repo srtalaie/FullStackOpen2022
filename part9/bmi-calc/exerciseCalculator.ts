@@ -11,6 +11,11 @@ interface exerciseOutput {
   average?: number
 }
 
+interface exerciseParams {
+  daily_exercises?: Array<number>,
+  target?: number
+}
+
 const validateArgs = (...args: Array<any>): Array<number> => {
   if (args[0].length < 3) throw new Error('Not enough arguments');
 
@@ -79,4 +84,31 @@ try {
     errorMessage += ' Error: ' + error.message;
   }
   console.log(errorMessage);
+}
+
+export function runExerciseCalc(args: exerciseParams) {
+  if (!args.daily_exercises || !args.target) {
+    return "parameters missing";
+  }
+  
+  if (isNaN(args.target) || args.daily_exercises.some(isNaN)) {
+    return "malformed parameters";
+  }
+  
+  const hoursPerDay: Array<number> = args.daily_exercises;
+  const target: number = args.target;
+
+  const argsArray: Array<number> = hoursPerDay.map((day: number): number => (day));
+
+  argsArray.unshift(target);
+
+  try {
+    return exerciseCalculator(argsArray);
+  } catch (error: unknown) {
+    let errorMessage = 'Something bad happened.';
+    if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+    return errorMessage;
+  }
 }
