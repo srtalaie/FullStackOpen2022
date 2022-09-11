@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Patient } from '../types/types';
+import toNewPatient from '../utils';
 
-const patients: Array<Patient> = [
+const data: Array<unknown> = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
         "name": "John McClane",
@@ -42,5 +45,11 @@ const patients: Array<Patient> = [
         "occupation": "Digital evangelist"
     }
 ];
+
+const patients: Patient [] = data.map((obj: any) => {
+  const object = toNewPatient(obj) as Patient;
+  object.id = obj.id;
+  return object;
+});
 
 export default patients;
