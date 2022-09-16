@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Gender, NewPatient } from "./types/types";
 
 const isString = (text: unknown): text is string => {
@@ -55,6 +56,7 @@ const toNewPatient = (object: any): NewPatient => {
     ssn: parseSSN(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
+    entries: object.entries
   };
   return newPatient;
 };
