@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios from "axios";
 import { Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useParams, useNavigate } from "react-router-dom";
-import { useStateValue } from "../state";
+import { addPatientToCache, useStateValue } from "../state";
 import { useEffect,useState } from "react";
 
 const PatientPage = () => {
@@ -20,7 +21,7 @@ const PatientPage = () => {
       } else {
         const {data: fetchedPatient}: Patient | any = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
         setPatient(fetchedPatient);
-        dispatch({ type: "ADD_PATIENT_TO_CACHE", payload: fetchedPatient });
+        dispatch(addPatientToCache(fetchedPatient));
       }
     } catch (error) {
       navigate('/');
