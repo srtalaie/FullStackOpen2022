@@ -4,7 +4,7 @@ const uniqueId: string = uuid();
 
 import patients from "../data/patients";
 
-import { Patient, NonSensitivePatientData, NewPatient } from "../types/types";
+import { Patient, NonSensitivePatientData, NewPatient, Entry } from "../types/types";
 
 const patientsData: Array<Patient> = patients;
 
@@ -36,9 +36,21 @@ const addPatient = (data: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (data: Entry, patientID: string): Patient | unknown => {
+  const newEntry: Entry = {
+    ...data,
+    id: uniqueId
+  };
+
+  const patient = patients.find((patient) => patient.id === patientID);
+  patient?.entries.push(newEntry);
+  return patient;
+};
+
 export default {
   getPatientsData,
   getNonSensitivePatientsData,
   addPatient,
-  getPatient
+  getPatient,
+  addEntry
 };
