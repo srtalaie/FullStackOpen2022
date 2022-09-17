@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios from "axios";
-import { Patient } from "../types";
+import { Entry, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useParams, useNavigate } from "react-router-dom";
 import { addPatientToCache, useStateValue } from "../state";
@@ -41,6 +42,26 @@ const PatientPage = () => {
         <p>Gender: {patient.gender}</p>
         <p>Occupation: {patient.occupation}</p>
         <p>SSN: {patient.ssn}</p>
+        <h3>Entries</h3>
+        {patient.entries ? (
+          <div>
+            {patient.entries.map((entry: Entry) => {
+              const content: unknown = (
+                <div>
+                  <p key={entry.id}>{entry.date} - {entry.description}</p>
+                  {
+                    entry.diagnosisCodes ? (
+                      <ul>
+                        {entry.diagnosisCodes.map((code: any) => (<li key={code}>{code}</li>))}
+                      </ul>
+                    ) : (<></>)
+                  }
+                </div>
+              );
+              return content;
+            })}
+          </div>
+        ) : (<p>Patient does not have any entries</p>)}
       </div>
     );
   }
