@@ -10,7 +10,13 @@ router.get('/', (_req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  res.send(patientService.getPatient(req.params.id));
+  const patient = patientService.getPatient(req.params.id);
+
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.send(404);
+  }
 });
 
 router.post('/', (req, res) => {
