@@ -17,7 +17,7 @@ export type Action =
   | {
     type: "SET_DIAGNOSES";
     payload: Diagnosis[];
-  };  
+  }; 
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express from 'express';
@@ -36,14 +37,13 @@ router.post('/', (req, res) => {
 });
 
 router.post('/:id/entries', (req, res) => {
-  const { entry }: any = req.body;
-  console.log(req.params.id);
+  const entry = req.body;
   const patient: Patient | unknown = patientService.getPatient(req.params.id);
 
   try {
     if (patient) {
       patientService.addEntry(entry, req.params.id);
-      res.send(patient);
+      res.send(entry);
     }
   } catch (error: unknown) {
     let errorMessage = 'Something went wrong.';

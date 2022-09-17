@@ -5,11 +5,14 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import axios from "axios";
 import Entries from "../components/Entries";
-import { Patient } from "../types";
+import { Entry, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import { useParams, useNavigate } from "react-router-dom";
-import { addPatientToCache, useStateValue } from "../state";
+import { addPatient, addPatientToCache, useStateValue } from "../state";
 import { useEffect,useState } from "react";
+import AddEntryModal from "../AddEntryModal";
+import { Button } from "@material-ui/core";
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
 
 const PatientPage = () => {
   const navigate = useNavigate();
@@ -17,6 +20,15 @@ const PatientPage = () => {
   const [patient, setPatient] = useState<Patient | any>();
   const [{ cache }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const openModal = (): void => setModalOpen(true);
+
+  const closeModal = (): void => {
+    setModalOpen(false);
+    setError(undefined);
+  };
 
   const getPatient = async () => {
     try {
@@ -31,10 +43,33 @@ const PatientPage = () => {
       navigate('/');
     }
   };
+
+  const submitNewEntry = async (values: EntryFormValues) => {
+    const { data: fetchedPatient }: Patient | any = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
+    try {
+      const { data: entry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${fetchedPatient.id}/entries`,
+        values,
+        fetchedPatient.id
+      );
+      console.log(entry);
+      fetchedPatient.entries.push(entry);
+      dispatch(addPatient(fetchedPatient));
+      closeModal();
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        console.error(e?.response?.data || "Unrecognized axios error");
+        setError(String(e?.response?.data?.error) || "Unrecognized axios error");
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
   
   useEffect(() => {
     void getPatient();
-  }, []);
+  }, [patient]);
 
   if (patient === undefined) {
     return <div>...loading</div>;
@@ -49,6 +84,15 @@ const PatientPage = () => {
         {patient.entries ? (
           <Entries entries={patient.entries} />
         ) : (<p>Patient does not have any entries</p>)}
+        <AddEntryModal
+          modalOpen={modalOpen}
+          onSubmit={submitNewEntry}
+          error={error}
+          onClose={closeModal}
+        />
+      <Button variant="contained" onClick={() => openModal()}>
+        Add New Entry
+      </Button>
       </div>
     );
   }
