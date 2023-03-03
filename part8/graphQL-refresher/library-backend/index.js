@@ -111,7 +111,13 @@ const resolvers = {
 				await book.save()
 				return book
 			} catch (error) {
-				console.log(error)
+				throw new GraphQLError("Saving book failed", {
+					extensions: {
+						code: "BAD_USER_INPUT",
+						invalidArgs: args,
+						error,
+					},
+				})
 			}
 		},
 		editAuthor: async (root, args) => {
@@ -121,7 +127,13 @@ const resolvers = {
 				await author.save()
 				return author
 			} catch (error) {
-				console.log(error)
+				throw new GraphQLError("Saving author failed", {
+					extensions: {
+						code: "BAD_USER_INPUT",
+						invalidArgs: args,
+						error,
+					},
+				})
 			}
 		},
 	},
