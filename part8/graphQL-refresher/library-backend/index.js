@@ -1,9 +1,13 @@
 const { ApolloServer } = require("@apollo/server")
 const { startStandaloneServer } = require("@apollo/server/standalone")
+const bcrypt = require("bcrypt")
+
 const mongoose = require("mongoose")
 mongoose.set("strictQuery", false)
+
 const Author = require("./models/Author")
 const Book = require("./models/Book")
+const User = require("./models/User")
 
 require("dotenv").config()
 
@@ -34,6 +38,12 @@ const typeDefs = `
 		id: ID!
 		genres: [String!]!
 	}
+	type User {
+		username: String!
+		password: String!
+		favoriteGenre: String
+		id: ID!
+	}
 	type Query {
 		bookCount: Int!
 		authorCount: Int!
@@ -54,6 +64,11 @@ const typeDefs = `
 			name: String!
 			born: Int!
 		): Author
+		createUser(
+			username: String!
+			password: String!
+			favoriteGenre: String
+		): User
 	}
 `
 
@@ -128,6 +143,22 @@ const resolvers = {
 				return author
 			} catch (error) {
 				throw new GraphQLError("Saving author failed", {
+					extensions: {
+						code: "BAD_USER_INPUT",
+						invalidArgs: args,
+						error,
+					},
+				})
+			}
+		},
+		createUser: async (root, args) => {
+			try {
+				let pwHash = await bcrypt.hash(args.password, 10)
+				const user = new User({ ...args, passwordHash: pwHash })
+				user.save()
+				return user
+			} catch (error) {
+				throw new GraphQLError("Saving user failed", {
 					extensions: {
 						code: "BAD_USER_INPUT",
 						invalidArgs: args,
