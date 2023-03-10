@@ -75,7 +75,7 @@ const typeDefs = `
 		createUser(
 			username: String!
 			password: String!
-			favoriteGenre: String
+			favoriteGenre: String!
 		): User
 		login(
 			username: String!
