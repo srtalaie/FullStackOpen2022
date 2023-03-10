@@ -159,8 +159,9 @@ const resolvers = {
 			const currentUser = context.currentUser
 
 			if (!currentUser) {
-				throw new AuthenticationError("not authenticated")
+				throw new GraphQLError("not authenticated")
 			}
+
 			try {
 				const author = await Author.findOne({ name: args.name })
 				author.born = args.born

@@ -3,7 +3,14 @@ import { useState } from "react"
 import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries"
 
 const Authors = (props) => {
-	const authors = useQuery(ALL_AUTHORS)
+	const [editedYear, setEditedYear] = useState("")
+	const [currentAuthor, setCurrentAuthor] = useState("")
+
+	const authors = useQuery(ALL_AUTHORS, {
+		onCompleted: (data) => {
+			setCurrentAuthor(data.allAuthors[0].name)
+		},
+	})
 	const [editAuthor] = useMutation(EDIT_AUTHOR, {
 		refetchQueries: [{ query: ALL_AUTHORS }],
 		onError: (error) => {
@@ -14,9 +21,6 @@ const Authors = (props) => {
 			props.setError(messages)
 		},
 	})
-
-	const [editedYear, setEditedYear] = useState("")
-	const [currentAuthor, setCurrentAuthor] = useState("")
 
 	const editYear = (event) => {
 		event.preventDefault()
@@ -56,7 +60,7 @@ const Authors = (props) => {
 						<tr key={a.name}>
 							<td>{a.name}</td>
 							<td>{a.born}</td>
-							<td>{a.bookCount}</td>
+							<td>{a.bookCount.length}</td>
 						</tr>
 					))}
 				</tbody>
