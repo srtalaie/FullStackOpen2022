@@ -1,4 +1,7 @@
 const { GraphQLError } = require("graphql")
+const { PubSub } = require("graphql-subscriptions")
+
+const pubsub = new PubSub()
 
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
@@ -56,6 +59,7 @@ const resolvers = {
 			if (!currentUser) {
 				throw new GraphQLError("not authenticated")
 			}
+
 			try {
 				let author = await Author.findOne({ name: args.author.name })
 
@@ -68,6 +72,9 @@ const resolvers = {
 
 				await author.save()
 				await book.save()
+
+				pubsub.publish("BOOK_ADDED", { bookAdded: book })
+
 				return book
 			} catch (error) {
 				throw new GraphQLError("Saving book failed", {
@@ -145,6 +152,11 @@ const resolvers = {
 					},
 				})
 			}
+		},
+	},
+	Subscription: {
+		bookAdded: {
+			subscribe: () => pubsub.asyncIterator("BOOK_ADDED"),
 		},
 	},
 }
