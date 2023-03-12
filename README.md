@@ -10,4 +10,4 @@
 [Part 7](https://github.com/srtalaie/FullStackOpen2022/tree/master/part7)\
 [Part 8](https://github.com/srtalaie/FullStackOpen2022/tree/master/part8)\
 [Part 9](https://github.com/srtalaie/FullStackOpen2022/tree/master/part9)\
-[Part 10](https://github.com/srtalaie/FullStackOpen2022/tree/master/part10)
+[Part 10](https://github.com/srtalaie/rate-repository-app/tree/master)
