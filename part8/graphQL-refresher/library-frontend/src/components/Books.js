@@ -39,8 +39,6 @@ const Books = (props) => {
 
 	const genres = [...new Set(allBooks.flatMap((b) => b.genres))].concat("all")
 
-	console.log(allBooks.flatMap((b) => b.genres))
-
 	const handleGenreClick = (genre) => {
 		setGenre(genre)
 
